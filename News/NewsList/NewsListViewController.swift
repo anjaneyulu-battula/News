@@ -11,35 +11,55 @@ import Combine
 class NewsListViewController: UIViewController {
 
     private var disposables = Set<AnyCancellable>()
-    let viewModel = NewsListViewModel()
+    var viewModel = NewsListViewModel()
 
     @IBOutlet weak var newsListTableView: UITableView!
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if !isPresentingForFirstTime {
+            startFetchNewsList()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-
-        self.title = "H4XOR NEWS"
-
         newsListTableView.dataSource = self
         newsListTableView.delegate = self
 
-        fetchNewsList()
+        registerNewsListUpdate()
+        startFetchNewsList()
     }
 
-    private func fetchNewsList() {
-        viewModel.fetchNewsList()
-
-        viewModel.$dataSource
-            .receive(on: DispatchQueue.main, options: nil)
-            .sink { [weak self] _ in
-                guard let weakSelf = self else { return }
-                weakSelf.newsListTableView.reloadData()
+    private func registerNewsListUpdate() {
+        viewModel.newsListUpdate = { [weak self] status in
+            guard let weakSelf = self else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                Utility.shared.hideLoader(viewController: weakSelf)
+                switch status {
+                case .success:
+                    weakSelf.newsListTableView.reloadData()
+                case .failure(let msg):
+                    Utility.shared.showAlert(viewController: weakSelf, msg: msg)
+                }
             }
-            .store(in: &disposables)
+        }
     }
-    
+
+    private func startFetchNewsList() {
+        DispatchQueue.main.async {
+            Utility.shared.showLoader(viewController: self)
+        }
+        viewModel.fetchReadNewsList()
+    }
+
+    @IBAction func logoutAction(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+
 
     /*
     // MARK: - Navigation
@@ -73,9 +93,16 @@ extension NewsListViewController: UITableViewDataSource {
 extension NewsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+
+        let newsRowViewModel = viewModel.dataSource[indexPath.row]
+        guard let _ = newsRowViewModel.url else {
+            Utility.shared.showAlert(viewController: self, msg: "URL is not available for this news article. Please try another one")
+            return
+        }
+
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let newsDetailsViewController = storyBoard.instantiateViewController(withIdentifier: "NewsDetailsViewController") as! NewsDetailsViewController
-        newsDetailsViewController.viewModel = NewsDetailsViewModel(newsAPIModel: viewModel.dataSource[indexPath.row])
+        newsDetailsViewController.viewModel = NewsDetailsViewModel(newsAPIModel: newsRowViewModel)
         self.navigationController?.pushViewController(newsDetailsViewController, animated: true)
     }
 }

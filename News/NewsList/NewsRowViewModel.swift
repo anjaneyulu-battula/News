@@ -10,9 +10,11 @@ import UIKit
 
 struct NewsRowViewModel {
     private let item: NewsListResponse.Item
+    private let readNewsDBList: [NewsDB]?
 
-    init(item: NewsListResponse.Item) {
-      self.item = item
+    init(item: NewsListResponse.Item, readNewsDBList: [NewsDB]?) {
+        self.item = item
+        self.readNewsDBList = readNewsDBList
     }
 
     var points: Int {
@@ -27,9 +29,32 @@ struct NewsRowViewModel {
         return item.url
     }
 
+    var newsObjectID: String {
+        return item.newsObjectID
+    }
+
+    var createdAt: Date {
+        return item.createdAt
+    }
+
     var isFromTodayColor: UIColor {
         print(" \(item.points) :::createdAt: \(item.createdAt) ::: \(Date().removeTimeStamp)")
         return (Date().removeTimeStamp ?? Date()) <= item.createdAt ? .red : .darkGray
+    }
+
+    var isRead: Bool {
+
+        if let readNewsList = readNewsDBList?.filter { $0.newsObjectId == item.newsObjectID }, readNewsList.isEmpty == false {
+            return true
+        } else {
+            return false
+        }
+
+//        if let readNewsList =  readNewsDBList?.filter({ $0.newsObjectId == item.newsObjectID }) {
+//            return true
+//        } else {
+//            return false
+//        }
     }
 
 }

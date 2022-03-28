@@ -17,11 +17,13 @@ struct NewsListResponse: Codable {
         var url: String?
         var title: String
         var createdAt: Date
+        let newsObjectID: String
 
         private enum DecodingKeys: String, CodingKey {
             case points
             case url
             case title
+            case newsObjectID = "objectID"
             case createdAt = "created_at"
         }
 
@@ -31,6 +33,7 @@ struct NewsListResponse: Codable {
             self.url = try container.decodeIfPresent(String.self, forKey: .url)
             self.title = try container.decode(String.self, forKey: .title)
             self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+            self.newsObjectID = try container.decode(String.self, forKey: .newsObjectID)
         }
     }
 }

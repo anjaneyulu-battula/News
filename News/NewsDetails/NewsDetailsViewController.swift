@@ -14,12 +14,28 @@ class NewsDetailsViewController: UIViewController {
 
     @IBOutlet weak var newsDetailsWebView: WKWebView!
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         loadWebView()
+        viewModel.updateDetails()
+        registerNewsDetailsUpdate()
+    }
+
+    private func registerNewsDetailsUpdate() {
+        viewModel.newsDetailsUpdate = { [weak self] status in
+            guard let weakSelf = self else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                Utility.shared.hideLoader(viewController: weakSelf)
+                switch status {
+                case .success:
+                    break
+                case .failure(let msg):
+                    Utility.shared.showAlert(viewController: weakSelf, msg: msg)
+                }
+            }
+        }
     }
 
     func loadWebView() {

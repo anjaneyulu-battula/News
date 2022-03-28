@@ -8,18 +8,49 @@
 import Foundation
 import Combine
 
+enum NewsListUpdateStatus {
+    case success
+    case failure(msg: String)
+}
+
 class NewsListViewModel {
-    @Published var dataSource = [NewsRowViewModel]()
+    typealias NewsListUpdate = (NewsListUpdateStatus) -> Void
+    var newsListUpdate: NewsListUpdate!
+
+    var dataSource = [NewsRowViewModel]()
 
     private var disposables = Set<AnyCancellable>()
 
     init() {}
 
-    func fetchNewsList() {
+    func fetchReadNewsList() {
+        DBManager.shared.getNewsListWith(email: Utility.shared.email) { [weak self] result
+            in
+
+            guard let weakSelf = self else { return }
+
+            switch result {
+            case .success(let readNewsDBList):
+                weakSelf.fetchNewsList(readNewsDBList: readNewsDBList)
+            case .failure(let errorDetails):
+                weakSelf.newsListUpdate(.failure(msg: errorDetails.msg))
+            }
+        }
+    }
+
+    func fetchNewsList(readNewsDBList: [NewsDB]?) {
+        //TODO :Add required data here
+//        guard dataSource.isEmpty else {
+//
+//        }
 
         APIManager.shared.getNewsList()
             .map { response in
-                response.hits.map(NewsRowViewModel.init)
+                response.hits.map { item in
+                    return NewsRowViewModel.init(item: item,
+                                          readNewsDBList: readNewsDBList)
+                }
+//                response.hits.map(NewsRowViewModel.init)
             }
             .receive(on: DispatchQueue.main, options: nil)
             .sink(
@@ -28,14 +59,15 @@ class NewsListViewModel {
                     switch value {
                     case .finished:
                         break
-                    case .failure:
-//                        print(error.localizedDescription)
+                    case .failure(let errorDetails):
                         weakSelf.dataSource = []
+                        weakSelf.newsListUpdate(.failure(msg: errorDetails.msg))
                     }
 
                 }, receiveValue: { [weak self] newsList in
                     guard let weakSelf = self else { return }
                     weakSelf.dataSource = newsList
+                    weakSelf.newsListUpdate(.success)
             })
             .store(in: &disposables)
 

@@ -29,6 +29,7 @@ class NewsListTableCell: UITableViewCell {
         titleLabel.text = newsAPIModel.title
         pointsLabel.textColor = newsAPIModel.isFromTodayColor
         titleLabel.textColor = newsAPIModel.isFromTodayColor
+        backgroundColor = newsAPIModel.isRead ? .green : .white
     }
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ge4-BN-I4v">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ayL-ad-AKZ">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--News List-->
+        <!--H4XOR NEWS-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController title="News List" id="BYZ-38-t0r" customClass="NewsListViewController" customModule="News" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewsListViewController" id="BYZ-38-t0r" customClass="NewsListViewController" customModule="News" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -74,14 +74,80 @@
                             <constraint firstItem="IDr-PF-q49" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="eDg-Q8-bEI"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="X6p-1r-an9"/>
+                    <navigationItem key="navigationItem" title="H4XOR NEWS" id="X6p-1r-an9">
+                        <barButtonItem key="rightBarButtonItem" title="Logout" id="YKH-zI-qsz">
+                            <connections>
+                                <action selector="logoutAction:" destination="BYZ-38-t0r" id="HN3-4k-ccn"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="newsListTableView" destination="IDr-PF-q49" id="tbx-D5-jwH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="928.98550724637687" y="97.767857142857139"/>
+            <point key="canvasLocation" x="1839.1304347826087" y="97.767857142857139"/>
+        </scene>
+        <!--Login Screen-->
+        <scene sceneID="8jn-jx-Ms3">
+            <objects>
+                <viewController id="7lq-si-fOz" customClass="LoginViewController" customModule="News" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aKr-7I-zMl">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ybJ-pu-BTD">
+                                <rect key="frame" x="50" y="188" width="314" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="bjN-57-M3d"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aKo-cm-J65">
+                                <rect key="frame" x="157" y="286" width="100" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="6eu-lj-Gmi"/>
+                                    <constraint firstAttribute="height" constant="31" id="H0d-To-Goh"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Login"/>
+                                <connections>
+                                    <action selector="loginButtonAction:" destination="7lq-si-fOz" eventType="touchUpInside" id="M1m-jM-o2h"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eDh-GL-3yr">
+                                <rect key="frame" x="50" y="232" width="314" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="aCC-al-24R"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="b42-sb-796"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="eDh-GL-3yr" firstAttribute="leading" secondItem="b42-sb-796" secondAttribute="leading" constant="50" id="8Fz-eO-haF"/>
+                            <constraint firstItem="ybJ-pu-BTD" firstAttribute="leading" secondItem="b42-sb-796" secondAttribute="leading" constant="50" id="HYN-yB-mws"/>
+                            <constraint firstItem="b42-sb-796" firstAttribute="trailing" secondItem="eDh-GL-3yr" secondAttribute="trailing" constant="50" id="T88-Eu-3Ik"/>
+                            <constraint firstItem="aKo-cm-J65" firstAttribute="centerX" secondItem="aKr-7I-zMl" secondAttribute="centerX" id="Wgt-hX-0uq"/>
+                            <constraint firstItem="aKo-cm-J65" firstAttribute="top" secondItem="eDh-GL-3yr" secondAttribute="bottom" constant="20" id="WsS-Pv-jaU"/>
+                            <constraint firstItem="b42-sb-796" firstAttribute="trailing" secondItem="ybJ-pu-BTD" secondAttribute="trailing" constant="50" id="kvh-od-s5F"/>
+                            <constraint firstItem="eDh-GL-3yr" firstAttribute="top" secondItem="ybJ-pu-BTD" secondAttribute="bottom" constant="10" id="mOv-0E-Yyt"/>
+                            <constraint firstItem="ybJ-pu-BTD" firstAttribute="top" secondItem="b42-sb-796" secondAttribute="top" constant="100" id="th2-wn-S5T"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Login Screen" id="OWG-zr-2oz"/>
+                    <connections>
+                        <outlet property="emailTextField" destination="ybJ-pu-BTD" id="jnQ-CM-oAN"/>
+                        <outlet property="passwordTextField" destination="eDh-GL-3yr" id="WSy-h2-Ih4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sUC-TX-boe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-326.08695652173918" y="97.767857142857139"/>
         </scene>
         <!--News Details View Controller-->
         <scene sceneID="pAh-Oa-HDi">
@@ -115,12 +181,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pBK-R3-6Dc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2033" y="110"/>
+            <point key="canvasLocation" x="2942.0289855072465" y="109.82142857142857"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="J5b-z7-c4S">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ge4-BN-I4v" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavNewsListViewController" automaticallyAdjustsScrollViewInsets="NO" id="ge4-BN-I4v" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="kvv-ZC-2NZ">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -133,7 +199,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QKr-pK-PR0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="18.840579710144929" y="97.767857142857139"/>
+            <point key="canvasLocation" x="928.98550724637687" y="97.767857142857139"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Dlh-HA-Lhq">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ayL-ad-AKZ" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Vr8-LW-kJH">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="7lq-si-fOz" kind="relationship" relationship="rootViewController" id="dQa-q7-VhU"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q8Z-2s-cXF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1236.231884057971" y="97.767857142857139"/>
         </scene>
     </scenes>
     <resources>

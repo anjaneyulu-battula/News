@@ -9,24 +9,35 @@ import Foundation
 import Combine
 
 enum NewsError: Error {
-  case parsing(description: String)
-  case network(description: String)
+    case parsing(description: String)
+    case network(description: String)
+    case coredata(description: String)
+
+    var msg: String {
+        switch self {
+        case .parsing(let description):
+            return description
+        case .network(let description):
+            return description
+        case .coredata(let description):
+            return description
+        }
+    }
 }
 
 func decode<T: Decodable>(_ data: Data) -> AnyPublisher<T, NewsError> {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
-  let dateFormatter = DateFormatter()
-  dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-
-  let decoder = JSONDecoder()
+    let decoder = JSONDecoder()
     decoder.dateDecodingStrategy = .formatted(dateFormatter)
 
-  return Just(data)
-    .decode(type: T.self, decoder: decoder)
-    .mapError { error in
-      .parsing(description: error.localizedDescription)
-    }
-    .eraseToAnyPublisher()
+    return Just(data)
+        .decode(type: T.self, decoder: decoder)
+        .mapError { error in
+        .parsing(description: error.localizedDescription)
+        }
+        .eraseToAnyPublisher()
 }
 
 final class APIManager {
