@@ -24,12 +24,11 @@ class NewsListTableCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-    func configure(newsAPIModel: NewsRowViewModel) {
-        pointsLabel.text = "\(newsAPIModel.points)"
-        titleLabel.text = newsAPIModel.title
-        pointsLabel.textColor = newsAPIModel.isFromTodayColor
-        titleLabel.textColor = newsAPIModel.isFromTodayColor
-        backgroundColor = newsAPIModel.isRead ? .green : .white
+    func configure(newsRowViewModel: NewsRowViewModel) {
+        pointsLabel.text = "\(newsRowViewModel.points)"
+        titleLabel.text = newsRowViewModel.title
+        pointsLabel.textColor = newsRowViewModel.isFromTodayColor
+        titleLabel.textColor = newsRowViewModel.isFromTodayColor
+        backgroundColor = newsRowViewModel.isRead ? .lightGray : .white
     }
-
 }

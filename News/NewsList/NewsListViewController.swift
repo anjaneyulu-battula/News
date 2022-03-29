@@ -8,20 +8,17 @@
 import UIKit
 import Combine
 
+protocol NewsListViewControllerDelegate: AnyObject {
+
+    func markArticleAsRead()
+}
+
 class NewsListViewController: UIViewController {
 
     private var disposables = Set<AnyCancellable>()
-    var viewModel = NewsListViewModel()
+    var viewModel: NewsListViewModel!
 
     @IBOutlet weak var newsListTableView: UITableView!
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        if !isPresentingForFirstTime {
-            startFetchNewsList()
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,39 +34,24 @@ class NewsListViewController: UIViewController {
     private func registerNewsListUpdate() {
         viewModel.newsListUpdate = { [weak self] status in
             guard let weakSelf = self else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                Utility.shared.hideLoader(viewController: weakSelf)
-                switch status {
-                case .success:
-                    weakSelf.newsListTableView.reloadData()
-                case .failure(let msg):
-                    Utility.shared.showAlert(viewController: weakSelf, msg: msg)
-                }
+            Utility.shared.hideLoader(viewController: weakSelf)
+            switch status {
+            case .success:
+                weakSelf.newsListTableView.reloadData()
+            case .failure(let msg):
+                Utility.shared.showAlert(viewController: weakSelf, msg: msg)
             }
         }
     }
 
     private func startFetchNewsList() {
-        DispatchQueue.main.async {
-            Utility.shared.showLoader(viewController: self)
-        }
+        Utility.shared.showLoader(viewController: self)
         viewModel.fetchReadNewsList()
     }
 
     @IBAction func logoutAction(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
@@ -83,8 +65,7 @@ extension NewsListViewController: UITableViewDataSource {
         guard let newsListTableCell = tableView.dequeueReusableCell(withIdentifier: "NewsListTableCell") as? NewsListTableCell else {
             return UITableViewCell()
         }
-
-        newsListTableCell.configure(newsAPIModel: viewModel.dataSource[indexPath.row])
+        newsListTableCell.configure(newsRowViewModel: viewModel.dataSource[indexPath.row])
         return newsListTableCell
     }
 }
@@ -99,10 +80,23 @@ extension NewsListViewController: UITableViewDelegate {
             Utility.shared.showAlert(viewController: self, msg: "URL is not available for this news article. Please try another one")
             return
         }
-
+        viewModel.selectedIndexPath = indexPath
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let newsDetailsViewController = storyBoard.instantiateViewController(withIdentifier: "NewsDetailsViewController") as! NewsDetailsViewController
-        newsDetailsViewController.viewModel = NewsDetailsViewModel(newsAPIModel: newsRowViewModel)
+        newsDetailsViewController.delegate = self
+        newsDetailsViewController.viewModel = NewsDetailsViewModel(email: viewModel.email,
+                                                                   newsRowViewModel: newsRowViewModel)
         self.navigationController?.pushViewController(newsDetailsViewController, animated: true)
+    }
+}
+
+// MARK: - NewsListViewControllerDelegate
+extension NewsListViewController: NewsListViewControllerDelegate {
+    
+    func markArticleAsRead() {
+        viewModel.updateArticleAsRead()
+        if let selectedIndexPath = viewModel.selectedIndexPath {
+            newsListTableView.reloadRows(at: [selectedIndexPath], with: .none)
+        }
     }
 }

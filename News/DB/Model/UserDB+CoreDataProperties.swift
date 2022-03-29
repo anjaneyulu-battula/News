@@ -19,7 +19,6 @@ extension UserDB {
     @NSManaged public var email: String?
     @NSManaged public var password: String?
     @NSManaged public var news: NSSet?
-
 }
 
 // MARK: Generated accessors for news

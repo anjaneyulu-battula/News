@@ -61,7 +61,7 @@ class LoginViewModel {
             }
         }
 
-        completion(.success(()))
+//        completion(.success(()))
     }
 
     func inserUser(email: String, password: String, completion: (Result<Void, LoginError>) -> Void) {
@@ -73,10 +73,6 @@ class LoginViewModel {
                 completion(.failure(.validation(description: errorDetails.msg)))
             }
         }
-    }
-
-    func setEmailId(email: String) {
-        Utility.shared.email = email
     }
 
 }

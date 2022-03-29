@@ -16,15 +16,19 @@ enum NewsListUpdateStatus {
 class NewsListViewModel {
     typealias NewsListUpdate = (NewsListUpdateStatus) -> Void
     var newsListUpdate: NewsListUpdate!
+    var email: String!
 
     var dataSource = [NewsRowViewModel]()
+    var selectedIndexPath: IndexPath?
 
     private var disposables = Set<AnyCancellable>()
 
-    init() {}
+    init(email: String) {
+        self.email = email
+    }
 
     func fetchReadNewsList() {
-        DBManager.shared.getNewsListWith(email: Utility.shared.email) { [weak self] result
+        DBManager.shared.getNewsListWith(email: email) { [weak self] result
             in
 
             guard let weakSelf = self else { return }
@@ -39,18 +43,18 @@ class NewsListViewModel {
     }
 
     func fetchNewsList(readNewsDBList: [NewsDB]?) {
-        //TODO :Add required data here
-//        guard dataSource.isEmpty else {
-//
-//        }
 
         APIManager.shared.getNewsList()
             .map { response in
                 response.hits.map { item in
-                    return NewsRowViewModel.init(item: item,
-                                          readNewsDBList: readNewsDBList)
+                    return NewsRowViewModel.init(points: item.points,
+                                                 title: item.title,
+                                                 url: item.url,
+                                                 newsObjectID: item.newsObjectID,
+                                                 createdAt: item.createdAt,
+                                                 isFromTodayColor: ((Date().removeTimeStamp ?? Date()) <= item.createdAt ? .red : .black),
+                                                 isRead: ((readNewsDBList?.filter { $0.newsObjectId == item.newsObjectID } ?? []).isEmpty ? false : true))
                 }
-//                response.hits.map(NewsRowViewModel.init)
             }
             .receive(on: DispatchQueue.main, options: nil)
             .sink(
@@ -70,23 +74,16 @@ class NewsListViewModel {
                     weakSelf.newsListUpdate(.success)
             })
             .store(in: &disposables)
+    }
 
-        /*
-        APIManager.shared.getNewsList()
-            .receive(on: DispatchQueue.main)
-            .map{ $0 }
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Done")
-                case .failure(let error):
-                    print("error")
-                }
-            } receiveValue: { [weak self] newsList in
-                guard let weakSelf = self else { return }
-                weakSelf.newsList = newsList
+    func updateArticleAsRead() {
+        if let selectedIndexPath = selectedIndexPath {
+            var rowViewModel = dataSource[selectedIndexPath.row]
+            if rowViewModel.isRead == false {
+                rowViewModel.isRead = true
+                dataSource[selectedIndexPath.row] = rowViewModel
             }
-            .store(in: &anyCancellable)*/
+        }
     }
 
 }

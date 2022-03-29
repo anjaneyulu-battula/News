@@ -11,6 +11,7 @@ import WebKit
 class NewsDetailsViewController: UIViewController {
 
     var viewModel: NewsDetailsViewModel!
+    weak var delegate: NewsListViewControllerDelegate?
 
     @IBOutlet weak var newsDetailsWebView: WKWebView!
 
@@ -18,39 +19,43 @@ class NewsDetailsViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        loadWebView()
-        viewModel.updateDetails()
+        newsDetailsWebView.navigationDelegate = self
         registerNewsDetailsUpdate()
+        viewModel.updateDetails()
     }
 
     private func registerNewsDetailsUpdate() {
         viewModel.newsDetailsUpdate = { [weak self] status in
             guard let weakSelf = self else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                Utility.shared.hideLoader(viewController: weakSelf)
-                switch status {
-                case .success:
-                    break
-                case .failure(let msg):
-                    Utility.shared.showAlert(viewController: weakSelf, msg: msg)
-                }
+            switch status {
+            case .success:
+                weakSelf.delegate?.markArticleAsRead()
+                Utility.shared.showLoader(viewController: weakSelf)
+                weakSelf.loadWebView()
+            case .failure(let msg):
+                Utility.shared.showAlert(viewController: weakSelf, msg: msg)
             }
         }
     }
 
     func loadWebView() {
-        newsDetailsWebView.load(viewModel.urlRequest)
+        guard let urlRequest = viewModel.urlRequest else {
+            Utility.shared.showAlert(viewController: self, msg: "News article URL is not available or URL parsing error")
+            return
+        }
+        newsDetailsWebView.load(urlRequest)
     }
-    
+}
 
-    /*
-    // MARK: - Navigation
+extension NewsDetailsViewController: WKNavigationDelegate {
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        Utility.shared.hideLoader(viewController: self)
     }
-    */
 
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        let e = error as NSError
+        Utility.shared.showAlert(viewController: self, msg: "\(e.domain) - \(e.localizedDescription) (\(e.code))")
+        Utility.shared.hideLoader(viewController: self)
+    }
 }

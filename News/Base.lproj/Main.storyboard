@@ -97,7 +97,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ybJ-pu-BTD">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ybJ-pu-BTD">
                                 <rect key="frame" x="50" y="188" width="314" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="bjN-57-M3d"/>
@@ -117,17 +117,17 @@
                                     <action selector="loginButtonAction:" destination="7lq-si-fOz" eventType="touchUpInside" id="M1m-jM-o2h"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eDh-GL-3yr">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eDh-GL-3yr">
                                 <rect key="frame" x="50" y="232" width="314" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="aCC-al-24R"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="b42-sb-796"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="systemGray4Color"/>
                         <constraints>
                             <constraint firstItem="eDh-GL-3yr" firstAttribute="leading" secondItem="b42-sb-796" secondAttribute="leading" constant="50" id="8Fz-eO-haF"/>
                             <constraint firstItem="ybJ-pu-BTD" firstAttribute="leading" secondItem="b42-sb-796" secondAttribute="leading" constant="50" id="HYN-yB-mws"/>
@@ -186,6 +186,7 @@
         <!--Navigation Controller-->
         <scene sceneID="J5b-z7-c4S">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QKr-pK-PR0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="NavNewsListViewController" automaticallyAdjustsScrollViewInsets="NO" id="ge4-BN-I4v" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="kvv-ZC-2NZ">
@@ -197,7 +198,6 @@
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="kJ8-F3-8Tz"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="QKr-pK-PR0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="928.98550724637687" y="97.767857142857139"/>
         </scene>
@@ -223,6 +223,9 @@
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray4Color">
+            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

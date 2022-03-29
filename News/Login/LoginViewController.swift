@@ -25,6 +25,13 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         passwordTextField.tag = LoginScreenTags.password.rawValue
 
+        // Hardcoded values for Validation
+        emailTextField.text = "abc@gmail.com"
+        passwordTextField.text = "abc"
+
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+        print("Sqlite Path: \(paths[0])")
+
     }
 
     @IBAction func loginButtonAction(_ sender: Any) {
@@ -33,21 +40,13 @@ class LoginViewController: UIViewController {
                                password: passwordTextField.text ?? "") { result in
             switch result {
             case .success():
-                viewModel.setEmailId(email: emailTextField.text ?? "")
 
                 let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
                 let newsListViewController = storyBoard.instantiateViewController(withIdentifier: "NewsListViewController") as! NewsListViewController
-                newsListViewController.viewModel = NewsListViewModel()
+                newsListViewController.viewModel = NewsListViewModel(email: emailTextField.text ?? "")
                 let navController = UINavigationController(rootViewController: newsListViewController)
                 navController.modalPresentationStyle = .fullScreen
-//                self.navigationController?.modalPresentationStyle = .overCurrentContext
                 self.navigationController?.present(navController, animated: true, completion: nil)
-
-//                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-//                let newsListViewController = storyBoard.instantiateViewController(withIdentifier: "NavNewsListViewController") as! UINavigationController
-//                newsListViewController.viewModel = NewsListViewModel()
-//                self.navigationController?.modalPresentationStyle = .fullScreen
-//                self.navigationController?.present(newsListViewController, animated: true, completion: nil)
 
             case .failure(let errorDetails):
                 Utility.shared.showAlert(viewController: self, msg: errorDetails.msg)

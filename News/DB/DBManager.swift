@@ -90,18 +90,22 @@ class DBManager {
     // Inserting News
     func insertNewsWith(email: String, newsModel: NewsRowViewModel,
                     completion: (Result<Void, NewsError>) -> Void) {
-        let newsDB = NewsDB(context: persistentContainer.viewContext)
-        newsDB.newsObjectId = newsModel.newsObjectID
-        newsDB.points = Int16(newsModel.points)
-        newsDB.title = newsModel.title
-        newsDB.url = newsModel.url
-        newsDB.createdAt = newsModel.createdAt
-
         getUserWith(email: email) { result in
             switch result {
             case .success(let userDB):
-                userDB?.addToNews(newsDB)
-                saveContext(completion: completion)
+                if let news = userDB?.news?.allObjects  as? [NewsDB], news.filter({ $0.newsObjectId == newsModel.newsObjectID }).isEmpty {
+
+                    let newsDB = NewsDB(context: persistentContainer.viewContext)
+                    newsDB.newsObjectId = newsModel.newsObjectID
+                    newsDB.points = Int16(newsModel.points)
+                    newsDB.title = newsModel.title
+                    newsDB.url = newsModel.url
+                    newsDB.createdAt = newsModel.createdAt
+
+                    userDB?.addToNews(newsDB)
+                    saveContext(completion: completion)
+                }
+                completion(.success(()))
             case .failure(let errorDetails):
                 completion(.failure(errorDetails))
             }
@@ -123,35 +127,4 @@ class DBManager {
             completion(.failure(.coredata(description: "Get userdata error")))
         }
     }
-
-    
-
-      /*
-    // Update PicOfDay
-    func updatePicOfTheDay(potd: PicOfTheDay, completion: (Result<Void, PicOfTheDayError>) -> Void) {
-        let fetchRequest = PicOfTheDayDB.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "potdDate LIKE %@", potd.date)
-        do {
-            if let picOfTheDayDB = try persistentContainer.viewContext.fetch(fetchRequest).first {
-                picOfTheDayDB.isFavourite = potd.isFavourite
-                picOfTheDayDB.favouritedDate = potd.isFavourite ? potd.favouritedDate : nil
-                saveContext(completion: completion)
-            }
-        } catch {
-            completion(.failure(.saveOrUpdateDBError))
-        }
-    }
-
-    // Get Favourites List
-    func getFavouriteList(completion: (Result<[PicOfTheDayDB], PicOfTheDayError>) -> Void) {
-        let fetchRequest = PicOfTheDayDB.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "isFavourite = %d", true)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "favouritedDate", ascending: false)]
-        do {
-            let favouriteList = try persistentContainer.viewContext.fetch(fetchRequest)
-            completion(.success(favouriteList))
-        } catch {
-            completion(.failure(.saveOrUpdateDBError))
-        }
-    }*/
 }

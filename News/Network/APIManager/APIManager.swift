@@ -67,54 +67,5 @@ final class APIManager {
                 decode(pair.data)
             }
             .eraseToAnyPublisher()
-
     }
-
 }
-
-
-/*
-final class APIManager {
-
-    static let shared = APIManager()
-    let session: URLSession!
-    var anyCancelable = Set<AnyCancellable>()
-
-
-    private init() {
-        session = URLSession(configuration: .default)
-    }
-
-    func getNewsList() -> AnyPublisher<[NewsAPIModel], Error> {
-
-        let urlString = "http://hn.algolia.com/api/v1/search?tags=front_page"
-        let url = URL(string: urlString)! // TODO: Need to add some check
-        let decoder = JSONDecoder()
-
-        return Future{ [weak self] promise in
-
-            guard let weakSelf = self else { return }
-            weakSelf.session.dataTaskPublisher(for: url)
-                .retry(1)
-                .mapError{$0}
-                .tryMap { element -> Data in
-                    guard let httpResponse = element.response as? HTTPURLResponse,
-                          httpResponse.statusCode == 200 else {
-                              throw URLError(.badServerResponse)
-                          }
-                    return element.data
-                }
-                .decode(type: [NewsAPIModel].self, decoder: decoder)
-                .receive(on: DispatchQueue.main)
-                .sink { _ in
-
-                } receiveValue: { newsList in
-                    promise(.success(newsList))
-                }
-                .store(in: &weakSelf.anyCancelable)
-        }
-        .eraseToAnyPublisher()
-
-    }
-
-}*/

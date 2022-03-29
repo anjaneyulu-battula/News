@@ -10,35 +10,39 @@ import UIKit
 
 final class Utility {
     static var shared = Utility()
-    var email = ""
-    var password = ""
 
     private init() {
 
     }
 
     func showLoader(viewController: UIViewController) {
-        let alert = UIAlertController(title: nil, message: "Loading Details...", preferredStyle: .alert)
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: nil, message: "Loading Details...", preferredStyle: .alert)
 
-        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.style = UIActivityIndicatorView.Style.medium
-        loadingIndicator.startAnimating();
+            let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+            loadingIndicator.hidesWhenStopped = true
+            loadingIndicator.style = UIActivityIndicatorView.Style.medium
+            loadingIndicator.startAnimating();
 
-        alert.view.addSubview(loadingIndicator)
-        viewController.present(alert, animated: true, completion: nil)
+            alert.view.addSubview(loadingIndicator)
+            viewController.present(alert, animated: true, completion: nil)
+        }
     }
 
     func hideLoader(viewController: UIViewController) {
-        viewController.dismiss(animated: false, completion: nil)
+        DispatchQueue.main.async {
+            viewController.dismiss(animated: false, completion: nil)
+        }
     }
 
     func showAlert(viewController: UIViewController, msg: String) {
-        let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: .alert)
-        let defaultAction = UIAlertAction(
-               title: "OK", style: .default, handler: nil)
-        alert.addAction(defaultAction)
-        viewController.present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: .alert)
+            let defaultAction = UIAlertAction(
+                   title: "OK", style: .default, handler: nil)
+            alert.addAction(defaultAction)
+            viewController.present(alert, animated: true, completion: nil)
+        }
     }
 }
 

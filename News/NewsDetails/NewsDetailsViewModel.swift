@@ -17,24 +17,28 @@ class NewsDetailsViewModel {
     typealias NewsDetailsUpdate = (NewsDetailsUpdateStatus) -> Void
     var newsDetailsUpdate: NewsDetailsUpdate!
 
+    let email: String!
     let newsRowViewModel: NewsRowViewModel!
 
-    init(newsAPIModel: NewsRowViewModel) {
-        self.newsRowViewModel = newsAPIModel
+    init(email: String, newsRowViewModel: NewsRowViewModel) {
+        self.email = email
+        self.newsRowViewModel = newsRowViewModel
     }
 
-    var urlRequest: URLRequest {
-        let url = URL(string: newsRowViewModel.url!)!
+    var urlRequest: URLRequest? {
+        guard let urlStr = newsRowViewModel.url, let url = URL(string: urlStr) else {
+            return nil
+        }
         let urlRequest = URLRequest.init(url: url)
         return urlRequest
     }
 
     func updateDetails() {
-        DBManager.shared.getUserWith(email: Utility.shared.email) { result in
+        DBManager.shared.getUserWith(email: email) { result in
             switch result {
             case .success(let userDB):
+                newsDetailsUpdate(.success)
                 insertReadNews(userDB: userDB)
-
             case .failure(let errorDetails):
                 newsDetailsUpdate(.failure(msg: errorDetails.msg))
             }
@@ -42,7 +46,7 @@ class NewsDetailsViewModel {
     }
 
     func insertReadNews(userDB: UserDB?) {
-        DBManager.shared.insertNewsWith(email: Utility.shared.email ,newsModel: newsRowViewModel) { [weak self] result in
+        DBManager.shared.insertNewsWith(email: email ,newsModel: newsRowViewModel) { [weak self] result in
             guard let weakSelf = self else { return }
             switch result {
             case .success():
