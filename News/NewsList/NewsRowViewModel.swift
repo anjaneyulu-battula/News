@@ -7,16 +7,17 @@
 
 import Foundation
 import UIKit
+import Combine
 
-struct NewsRowViewModel {
+class NewsRowViewModel: ObservableObject {
 
     var points: Int
     var title: String
     var url: String?
     var newsObjectID: String
     var createdAt: Date
-    var isFromTodayColor: UIColor
-    var isRead: Bool
+    var isReadColor: UIColor
+    @Published var isFromTodayColor: UIColor
 
     init(points: Int,
          title: String,
@@ -24,13 +25,16 @@ struct NewsRowViewModel {
          newsObjectID: String,
          createdAt: Date,
          isFromTodayColor: UIColor,
-         isRead: Bool = false) {
+         isReadColor: UIColor = .white) {
+
+        print(" \(points) :::createdAt: \(createdAt) ::: \(String(describing: Date().removeTimeStamp))")
+
         self.points = points
         self.title = title
         self.url = url
         self.newsObjectID = newsObjectID
         self.createdAt = createdAt
         self.isFromTodayColor = isFromTodayColor
-        self.isRead = isRead
+        self.isReadColor = isReadColor
     }
 }

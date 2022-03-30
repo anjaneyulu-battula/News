@@ -26,8 +26,8 @@ class LoginViewController: UIViewController {
         passwordTextField.tag = LoginScreenTags.password.rawValue
 
         // Hardcoded values for Validation
-        emailTextField.text = "abc@gmail.com"
-        passwordTextField.text = "abc"
+//        emailTextField.text = "abc@gmail.com"
+//        passwordTextField.text = "abc"
 
         let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         print("Sqlite Path: \(paths[0])")

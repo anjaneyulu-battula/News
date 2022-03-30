@@ -30,7 +30,7 @@ final class Utility {
     }
 
     func hideLoader(viewController: UIViewController) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             viewController.dismiss(animated: false, completion: nil)
         }
     }
@@ -51,7 +51,12 @@ extension Date {
        guard let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: self)) else {
         return nil
        }
-       return date
+
+        return date
+
+        //Added for testing
+//        let resultDate = Calendar.current.date(byAdding: .hour, value: -8, to: date)
+//        return resultDate
    }
 }
 

@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Combine
 
 class NewsListTableCell: UITableViewCell {
+
+    private var disposables = Set<AnyCancellable>()
 
     @IBOutlet weak var pointsLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
@@ -27,8 +30,15 @@ class NewsListTableCell: UITableViewCell {
     func configure(newsRowViewModel: NewsRowViewModel) {
         pointsLabel.text = "\(newsRowViewModel.points)"
         titleLabel.text = newsRowViewModel.title
-        pointsLabel.textColor = newsRowViewModel.isFromTodayColor
-        titleLabel.textColor = newsRowViewModel.isFromTodayColor
-        backgroundColor = newsRowViewModel.isRead ? .lightGray : .white
+
+        newsRowViewModel.$isFromTodayColor
+            .sink {[weak self] resultColor in
+                guard let weakSelf = self else { return }
+                weakSelf.pointsLabel.textColor = resultColor
+                weakSelf.titleLabel.textColor = resultColor
+            }
+            .store(in: &disposables)
+
+        backgroundColor = newsRowViewModel.isReadColor
     }
 }

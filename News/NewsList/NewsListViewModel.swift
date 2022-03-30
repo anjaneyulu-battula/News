@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 enum NewsListUpdateStatus {
     case success
@@ -53,7 +54,7 @@ class NewsListViewModel {
                                                  newsObjectID: item.newsObjectID,
                                                  createdAt: item.createdAt,
                                                  isFromTodayColor: ((Date().removeTimeStamp ?? Date()) <= item.createdAt ? .red : .black),
-                                                 isRead: ((readNewsDBList?.filter { $0.newsObjectId == item.newsObjectID } ?? []).isEmpty ? false : true))
+                                                 isReadColor: ((readNewsDBList?.filter { $0.newsObjectId == item.newsObjectID } ?? []).isEmpty ? .white : .lightGray.withAlphaComponent(0.5)))
                 }
             }
             .receive(on: DispatchQueue.main, options: nil)
@@ -78,11 +79,9 @@ class NewsListViewModel {
 
     func updateArticleAsRead() {
         if let selectedIndexPath = selectedIndexPath {
-            var rowViewModel = dataSource[selectedIndexPath.row]
-            if rowViewModel.isRead == false {
-                rowViewModel.isRead = true
-                dataSource[selectedIndexPath.row] = rowViewModel
-            }
+            let rowViewModel = dataSource[selectedIndexPath.row]
+            rowViewModel.isReadColor = .lightGray.withAlphaComponent(0.5)
+//                dataSource[selectedIndexPath.row] = rowViewModel
         }
     }
 
