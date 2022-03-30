@@ -30,7 +30,7 @@ class NewsDetailsViewController: UIViewController {
             switch status {
             case .success:
                 weakSelf.delegate?.markArticleAsRead()
-                Utility.shared.showLoader(viewController: weakSelf)
+//                Utility.shared.showLoader(viewController: weakSelf)
                 weakSelf.loadWebView()
             case .failure(let msg):
                 Utility.shared.showAlert(viewController: weakSelf, msg: msg)
@@ -50,12 +50,12 @@ class NewsDetailsViewController: UIViewController {
 extension NewsDetailsViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        Utility.shared.hideLoader(viewController: self)
+//        Utility.shared.hideLoader(viewController: self)
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         let e = error as NSError
         Utility.shared.showAlert(viewController: self, msg: "\(e.domain) - \(e.localizedDescription) (\(e.code))")
-        Utility.shared.hideLoader(viewController: self)
+//        Utility.shared.hideLoader(viewController: self)
     }
 }
